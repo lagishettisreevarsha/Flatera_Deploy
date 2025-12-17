@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
 /* =====================
    BASE
@@ -10,9 +10,10 @@
 :host {
   display: block;
   padding: 2rem 2.5rem;
-  background: #f4f1ed;
+  background: linear-gradient(135deg, #f8f6f3 0%, #f4f1ed 100%);
   font-family: 'Inter', sans-serif;
   color: #2f2a26;
+  min-height: 100vh;
 }
 
 /* =====================

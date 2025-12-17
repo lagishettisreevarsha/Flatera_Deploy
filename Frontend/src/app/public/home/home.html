@@ -2,14 +2,14 @@
 
   <!-- Header -->
   <header class="dashboard-header">
-    <h1>Available Flats</h1>
+    <h1>All Flats</h1>
     <button class="logout-btn" (click)="onLogout()">Logout</button>
   </header>
 
   <!-- Flats Grid -->
   <div class="flats-grid" *ngIf="flats && flats.length > 0; else noFlats">
 
-    <div class="flat-card" *ngFor="let f of flats">
+    <div class="flat-card" *ngFor="let f of flats" (click)="viewFlatDetails(f.id)" style="cursor: pointer;">
 
       <div class="flat-header">
         <h3>Flat #{{ f.flat_no }}</h3>
@@ -44,7 +44,7 @@
   <!-- Empty State -->
   <ng-template #noFlats>
     <div class="empty-state">
-      <p>No flats available at the moment.</p>
+      <p>No flats found at the moment.</p>
     </div>
   </ng-template>
 

@@ -9,7 +9,7 @@ from flask_cors import CORS
 app=Flask(__name__)
 CORS(app,origins=["http://localhost:4200"])
 app.config.from_object(Config)
-
+           
 db.init_app(app)
 Marshmallow.init_app(app)   
 bcrypt.init_app(app)

@@ -7,6 +7,10 @@ export class Auth{
 
   constructor(private http: HttpClient) {}
 
+  get apiUrl(): string {
+    return this.API;
+  }
+
   register(data: any) {
     return this.http.post(`${this.API}/auth/register`, data);
   }
@@ -22,6 +26,10 @@ export class Auth{
 
   getFlats() {
     return this.http.get(`${this.API}/public/flats`);
+  }
+
+  getFlatDetails(flatId: string) {
+    return this.http.get(`${this.API}/public/flats/${flatId}`);
   }
 
   requestBooking(flatId: number) {
@@ -58,6 +66,8 @@ export class Auth{
   getAdminFlats() {
     return this.http.get(`${this.API}/admin/flats`);
   }
+  
+
   addFlat(data: any) {
     return this.http.post(`${this.API}/admin/flats`, data);
   }

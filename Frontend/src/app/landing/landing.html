@@ -1,20 +1,147 @@
-<section class="hero">
-  <div class="hero-overlay"></div>
+<!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h1>Flatera</h1>
+            </div>
+            <div class="nav-menu">
+                <a routerLink="/landing" class="nav-link">Home</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a routerLink="/gallery" class="nav-link">Gallery</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <button (click)="goToLogin()" class="nav-btn primary">Login</button>
+                <button (click)="goToRegister()" class="nav-btn secondary">Register</button>
+            </div>
+        </div>
+    </nav>
 
-  <div class="hero-content">
-    <h1>Flatera</h1>
-    <p>Luxury apartments designed for modern, effortless living.</p>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Luxury Living Redefined</h1>
+            <p>Experience the pinnacle of modern apartment living with breathtaking designs and unparalleled comfort</p>
+            <div class="hero-buttons">
+                <button (click)="exploreProperties()" class="btn primary">Explore Properties</button>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="https://i.pinimg.com/736x/44/04/fc/4404fc4fd01a0a4e83b93a965b14651f.jpg" alt="Luxury Living Room">
+        </div>
+    </section>
 
-    <div class="hero-actions">
-      <a routerLink="/login" class="btn primary">Login</a>
-      <a routerLink="/register" class="btn outline">Register</a>
-    </div>
-  </div>
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2>Exceptional Features</h2>
+            <p>Discover what makes Flatera the ultimate choice for luxury living</p>
+            
+            <div class="features-grid">
+                <div *ngFor="let feature of features" class="feature-card">
+                    <div class="feature-image-container">
+                        <img [src]="feature.image" [alt]="feature.title" class="feature-image">
+                        <div class="feature-overlay">
+                            <h3>{{ feature.title }}</h3>
+                            <p>{{ feature.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <div class="hero-image">
-    <img
-      src="https://res.cloudinary.com/dhzzlikgi/image/upload/v1765908080/Screenshot_2025-12-16_233058_z9oohv.png"
-      alt="Luxury Apartment"
-    />
-  </div>
-</section>
+    <!-- Lifestyle Gallery Section -->
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <h2>Lifestyle Gallery</h2>
+            <p>Explore our curated collection of luxury living spaces</p>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item large">
+                    <img src="https://i.pinimg.com/736x/af/ef/c4/afefc48254b5d188d88b657cf472f466.jpg" alt="Luxury Interior">
+                </div>
+                
+                <div class="gallery-item">
+                    <img src="https://i.pinimg.com/736x/44/04/fc/4404fc4fd01a0a4e83b93a965b14651f.jpg" alt="Modern Design">
+                </div>
+                
+                <div class="gallery-item">
+                    <img src="https://i.pinimg.com/736x/f4/7b/44/f47b44f51db9069c5698aee5999d97b1.jpg" alt="Elegant Space">
+                </div>
+                
+                <div class="gallery-item">
+                    <img src="https://i.pinimg.com/736x/ed/d3/68/edd368e9fb32508965ec47089027a4b5.jpg" alt="Premium Living">
+                </div>
+                
+                
+                <div class="gallery-item">
+                    <img src="https://i.pinimg.com/1200x/c8/c7/87/c8c787d6ba3878349e27e24b88f0878c.jpg" alt="Modern Living">
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Amenities Section -->
+    <section id="amenities" class="amenities">
+        <div class="container">
+            <h2>World-Class Amenities</h2>
+            <p>Enjoy exclusive facilities designed for your ultimate comfort and convenience</p>
+            
+            <div class="amenities-grid">
+                <div *ngFor="let amenity of amenities" class="amenity-card">
+                    <div class="amenity-content">
+                        <h3>{{ amenity.title }}</h3>
+                        <p>{{ amenity.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Experience Luxury Living?</h2>
+                <p>Join our exclusive community and discover your dream apartment</p>
+                <div class="cta-buttons">
+                    <button (click)="getStarted()" class="btn outline">Get Started</button>
+                    <button (click)="learnMore()" class="btn outline">Learn More</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Flatera</h3>
+                    <p>Redefining luxury living with exceptional design and unparalleled comfort.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#gallery">Gallery</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Flatera Residences<br>Hyderabad, Telangana</p>
+                    <p>support@flatera.com<br>+91 9010121106</p>
+                </div>
+
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Flatera. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+        

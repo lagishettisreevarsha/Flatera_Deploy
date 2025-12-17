@@ -127,28 +127,61 @@ def update_tower(tower_id):
 @admin_bp.route('/flats',methods=['GET'])
 # @admin_required
 def get_flats():
-    flats=Flat.query.all()
+    try:
+        flats=Flat.query.all()
 
-    data=[{
-        "id":flat.id,
-        "flat_no":flat.flat_no,
-        "bedrooms":flat.bedrooms,
-        "sqft":flat.sqft,
-        "rent":flat.rent,
-        "is_available":flat.is_available,
-        "tower_id":flat.tower_id
-    } for flat in flats]
+        data=[{
+            "id":flat.id,
+            "flat_no":flat.flat_no,
+            "bedrooms":flat.bedrooms,
+            "sqft":flat.sqft,
+            "rent":flat.rent,
+            "is_available":flat.is_available,
+            "tower_id":flat.tower_id
+        } for flat in flats]
 
-    return jsonify(data),200
+        return jsonify(data),200
+    except Exception as e:
+        print(f"Error in admin get_flats: {str(e)}")
+        return jsonify({"error": "Failed to load flats", "details": str(e)}),500
 
 @admin_bp.route('/flats',methods=['POST'])
 # @admin_required
 def create_flat():
-    data=request.json
-    print(data)
+    # Handle both JSON and multipart form data
+    if request.is_json:
+        data = request.json
+        image_filename = None
+    else:
+        data = request.form.to_dict()
+        image_file = request.files.get('image')
+        image_filename = None
+        
+        if image_file and image_file.filename:
+            # Save image file
+            import os
+            from werkzeug.utils import secure_filename
+            
+            # Create uploads directory if it doesn't exist
+            upload_dir = os.path.join(os.getcwd(), 'static', 'images', 'flats')
+            os.makedirs(upload_dir, exist_ok=True)
+            
+            # Secure the filename and save the file
+            filename = secure_filename(image_file.filename)
+            image_filename = f"{filename}"
+            image_path = os.path.join(upload_dir, image_filename)
+            image_file.save(image_path)
+            
+            print(f"Image saved: {image_path}")
+    
+    print(f"Received data: {data}")
     schema = FlatSchema()
     try:
-        validated_data = schema.load(request.json)
+        # Convert form data to dict for validation
+        if request.is_json:
+            validated_data = schema.load(request.json)
+        else:
+            validated_data = schema.load(data)
     except ValidationError as err:
         return {"errors": err.messages}, 400
     
@@ -158,9 +191,14 @@ def create_flat():
     rent = validated_data["rent"]
     tower_id = validated_data["tower_id"]
     is_available = validated_data.get("is_available", True)
+    
+    # Add additional fields
+    description = validated_data.get("description")
+    features = validated_data.get("features")
+    floor = validated_data.get("floor")
 
     if not all([flat_no,bedrooms,sqft,rent,tower_id]):
-        return jsonify({'message':'All fields are required'}),400
+        return jsonify({'message':'All required fields must be provided'}),400
     
     if Flat.query.filter_by(flat_no=flat_no).first():
         return jsonify({'message':'Flat already exists'}),400
@@ -175,13 +213,17 @@ def create_flat():
         sqft=sqft,
         rent=rent,
         tower_id=tower_id,
-        is_available=is_available
+        is_available=is_available,
+        image=image_filename,
+        description=description,
+        features=features,
+        floor=floor
     )
 
     db.session.add(new_flat)
     db.session.commit()
 
-    return jsonify({'message':'Flat created successfully'}),201
+    return jsonify({'message':'Flat created successfully', 'image': image_filename}),201
 
 @admin_bp.route('/flats/<int:flat_id>',methods=['PUT'])
 
@@ -232,8 +274,10 @@ def delete_flat(flat_id):
     if not flat:
         return jsonify({'message':'Flat not found'}),404
 
-    if flat.bookings:
-        return jsonify({'message':'Cannot delete flat with existing bookings'}),400
+    booking = Booking.query.filter_by(flat_id=flat.id).first()
+
+    if booking:
+        return jsonify({'message': 'Cannot delete flat with existing bookings'}), 400
     
     db.session.delete(flat)
     db.session.commit()

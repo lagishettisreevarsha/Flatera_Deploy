@@ -19,6 +19,18 @@
       <input type="number" [(ngModel)]="newFlat.bedrooms" name="bedrooms" placeholder="Bedrooms" />
       <input type="number" [(ngModel)]="newFlat.sqft" name="sqft" placeholder="Square Feet" />
       <input type="number" [(ngModel)]="newFlat.rent" name="rent" placeholder="Rent Amount" />
+      <input type="number" [(ngModel)]="newFlat.floor" name="floor" placeholder="Floor Number" />
+      
+      <input [(ngModel)]="newFlat.description" name="description" placeholder="Description" />
+      <input [(ngModel)]="newFlat.features" name="features" placeholder="Features (comma separated)" />
+      
+      <div class="form-group">
+        <label>Flat Image:</label>
+        <input type="file" (change)="onImageSelect($event)" accept="image/*" />
+        <div *ngIf="selectedImage" class="image-preview">
+          <img [src]="imagePreview" alt="Preview" style="max-width: 200px; max-height: 150px; margin-top: 10px; border-radius: 8px;" />
+        </div>
+      </div>
 
       <label class="checkbox">
         <input type="checkbox" [(ngModel)]="newFlat.is_available" name="is_available" />
@@ -79,6 +91,7 @@
             [class.unavailable]="!f.is_available">
             {{ f.is_available ? 'Available' : 'Unavailable' }}
           </span>
+          <!-- console.log(f.is_available) -->
           <span>Tower: {{ getTowerName(f.tower_id) }}</span>
         </div>
 

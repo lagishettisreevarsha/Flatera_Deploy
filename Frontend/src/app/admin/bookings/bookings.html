@@ -6,33 +6,43 @@
     <p class="subtitle">Review and manage booking requests</p>
   </div>
 
+  <!-- Error State -->
+  <div *ngIf="error" class="error">
+    {{ error }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    Loading bookings...
+  </div>
+
   <!-- Empty State -->
-  <div *ngIf="!bookings.length" class="empty-state">
+  <div *ngIf="!loading && !bookings.length" class="empty-state">
     No pending bookings available.
   </div>
 
   <!-- Booking List -->
-  <ul class="booking-list">
+  <ul *ngIf="!loading && bookings.length" class="booking-list">
     <li *ngFor="let b of bookings" class="booking-item">
 
       <div class="booking-info">
         <span class="booking-id">#{{ b.id }}</span>
         <span class="booking-user">
-          {{ b.tenant_name || b.user_name || 'User' }}
+          {{ getUserName(b) }}
         </span>
         <span class="booking-flat">
-          Flat {{ b.flat_id }}
+          {{ getFlatInfo(b) }}
         </span>
-        <span class="booking-status">
+        <span class="booking-status" [ngClass]="getStatusClass(b.status)">
           {{ b.status }}
         </span>
       </div>
 
       <div class="booking-actions">
-        <button class="btn-approve" (click)="approve(b)">
+        <button class="btn-approve" (click)="approve(b)" [disabled]="!b.id">
           Approve
         </button>
-        <button class="btn-decline" (click)="decline(b)">
+        <button class="btn-decline" (click)="decline(b)" [disabled]="!b.id">
           Decline
         </button>
       </div>

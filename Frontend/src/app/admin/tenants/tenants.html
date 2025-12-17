@@ -6,26 +6,40 @@
     <p class="subtitle">View tenants and their assigned flats</p>
   </div>
 
+  <!-- Error State -->
+  <div *ngIf="error" class="error">
+    {{ error }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    Loading tenants...
+  </div>
+
   <!-- Empty State -->
-  <div *ngIf="!tenants.length" class="empty-state">
+  <div *ngIf="!loading && !tenants.length" class="empty-state">
     No tenants found.
   </div>
 
   <!-- Tenants List -->
-  <ul class="tenant-list">
+  <ul *ngIf="!loading && tenants.length" class="tenant-list">
     <li *ngFor="let t of tenants" class="tenant-item">
 
       <div class="tenant-info">
         <span class="tenant-name">
-          {{ t.user_name || t.name }}
+          {{ getTenantName(t) }}
         </span>
 
         <span class="tenant-flat">
-          Flat {{ t.flat_no || t.flat_id }}
+          {{ getFlatInfo(t) }}
         </span>
 
         <span class="tenant-tower">
-          Tower {{ t.tower_name || t.tower_id }}
+          {{ getTowerInfo(t) }}
+        </span>
+
+        <span class="tenant-id">
+          ID: {{ t.booking_id }}
         </span>
       </div>
 

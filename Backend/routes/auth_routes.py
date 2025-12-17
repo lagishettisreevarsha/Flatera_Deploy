@@ -6,8 +6,6 @@ from flask_jwt_extended import create_access_token
 
 auth_bp = Blueprint("auth", __name__)
 
-
-# ---------- REGISTER ----------
 @auth_bp.route("/register", methods=["POST"])
 def register():
     data = request.json
@@ -27,8 +25,6 @@ def register():
 
     return jsonify({"message": "User registered successfully"}), 201
 
-
-# ---------- LOGIN ----------
 @auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.json
@@ -37,10 +33,9 @@ def login():
     if not user or not user.check_password(data["password"]):
         return jsonify({"message": "Invalid credentials"}), 401
 
-    # ✅ FIX: identity is a DICTIONARY
     access_token = create_access_token(
-        identity={
-            "id": str(user.id),
+        identity=str(user.id),
+        additional_claims={
             "role": str(user.role)
         }
     )

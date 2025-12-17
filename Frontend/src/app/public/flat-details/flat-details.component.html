@@ -1,0 +1,92 @@
+<div class="flat-details-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading flat details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <p>{{ error }}</p>
+    <button class="back-btn" (click)="goBack()">Back to Flats</button>
+  </div>
+
+  <!-- Flat Details -->
+  <div *ngIf="flat && !loading" class="flat-content">
+    <!-- Header with Back Button -->
+    <div class="flat-header">
+      <button class="back-btn" (click)="goBack()">
+        <span>&larr;</span>
+        Back to Flats
+      </button>
+      <h1>Flat #{{ flat.flat_no }}</h1>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flat-main">
+      <!-- Image Gallery -->
+      <div class="flat-gallery">
+        <img 
+          [src]="flat.image" 
+          [alt]="'Flat ' + flat.flat_no" 
+          class="main-image"
+          (error)="onImageError($event)"
+          (load)="onImageLoad($event)">
+        <div *ngIf="imageLoading" class="image-loading">
+          <div class="small-spinner"></div>
+        </div>
+      </div>
+
+      <!-- Details Section -->
+      <div class="flat-info">
+        <div class="info-section">
+          <h2>Property Details</h2>
+          <p class="description">{{ flat.description }}</p>
+          <div class="specs">
+            <div class="spec-item">
+              <span class="spec-label">Bedrooms:</span>
+              <span class="spec-value">{{ flat.bedrooms }}</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Area:</span>
+              <span class="spec-value">{{ flat.sqft }} sqft</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Rent:</span>
+              <span class="spec-value">₹{{ flat.rent | number:'1.0-0' }}/month</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Location:</span>
+              <span class="spec-value">{{ flat.location }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-section">
+          <h2>Amenities & Features</h2>
+          <div class="features-grid">
+            <div *ngFor="let feature of flat.features" class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span class="feature-text">{{ feature }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking Section -->
+        <div class="booking-section">
+          <div class="availability-status" [class.available]="flat.is_available" [class.unavailable]="!flat.is_available">
+            {{ flat.is_available ? 'Available' : 'Not Available' }}
+          </div>
+          
+          <button 
+            class="book-btn" 
+            (click)="bookFlat()"
+            [disabled]="!flat.is_available">
+            {{ flat.is_available ? 'Book This Flat' : 'Currently Unavailable' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

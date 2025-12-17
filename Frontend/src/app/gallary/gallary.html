@@ -1,0 +1,18 @@
+<div class="gallery-container">
+    <header class="gallery-header">
+        <h1>Flatera Gallery</h1>
+        <p>Explore our collection of luxury living spaces</p>
+    </header>
+    
+    <div class="gallery-grid">
+        <div *ngFor="let image of images" class="gallery-item">
+            <div class="image-container">
+                <img [src]="image.url" [alt]="image.title" class="gallery-image">
+                <div class="image-overlay">
+                    <h3>{{ image.title }}</h3>
+                    <p>{{ image.description }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

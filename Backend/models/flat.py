@@ -9,6 +9,10 @@ class Flat(db.Model):
     sqft=db.Column(db.Integer, nullable=False)
     rent=db.Column(db.Float, nullable=False)
     is_available=db.Column(db.Boolean, default=True)
+    image=db.Column(db.String(255), nullable=True)  # Image path field
+    description=db.Column(db.Text, nullable=True)  # Description field
+    features=db.Column(db.Text, nullable=True)  # Features field (JSON string)
+    floor=db.Column(db.Integer, nullable=True)  # Floor number
 
     tower_id=db.Column(db.Integer, db.ForeignKey('towers.id'), nullable=False)
 
