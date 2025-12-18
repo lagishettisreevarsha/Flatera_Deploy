@@ -29,13 +29,26 @@
       
       <div class="booking-info">
         <span class="booking-id">#{{ booking.id }}</span>
-        <span class="booking-flat">Flat {{ booking.flat_id }}</span>
+        <span class="booking-flat">Flat {{ booking.flat_no || booking.flat_id }}</span>
+        <span class="booking-tower">{{ booking.tower_name || 'Unknown Tower' }}</span>
         <span class="booking-date">
           {{ booking.booking_date ? (booking.booking_date | date:'mediumDate') : 'Date not available' }}
         </span>
         <span class="booking-status" [ngClass]="getStatusClass(booking.status)">
           {{ booking.status || 'Unknown' }}
         </span>
+      </div>
+
+      <!-- Action buttons for declined bookings -->
+      <div *ngIf="booking.status === 'declined'" class="booking-actions">
+        <p class="declined-message">Your booking request was declined. You can try booking this flat again.</p>
+        <button class="btn-rebook" (click)="rebookFlat(booking.flat_id)">Book Again</button>
+      </div>
+
+      <!-- Message for approved bookings -->
+      <div *ngIf="booking.status === 'approved'" class="booking-actions">
+        <p class="approved-message">Congratulations! Your booking has been approved.</p>
+        <button class="btn-view" (click)="viewFlat(booking.flat_id)">View Flat Details</button>
       </div>
 
     </div>

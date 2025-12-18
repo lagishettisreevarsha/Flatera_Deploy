@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Auth } from '../../core/auth';
 
 @Component({
@@ -13,7 +14,7 @@ export class Tenants implements OnInit {
   loading: boolean = true;
   error: string = '';
   
-  constructor(private api: Auth) {}
+  constructor(private api: Auth, private router: Router) {}
   
   ngOnInit() { 
     this.load(); 
@@ -58,5 +59,9 @@ export class Tenants implements OnInit {
   
   getTowerInfo(tenant: any): string {
     return tenant.tower_name || `Tower ${tenant.tower_id}` || 'Unknown Tower';
+  }
+  
+  goBack(): void {
+    this.router.navigate(['/admin/dashboard']);
   }
 }

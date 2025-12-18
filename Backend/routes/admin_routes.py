@@ -16,14 +16,23 @@ admin_bp=Blueprint('/admin',__name__)
 # @admin_required
 def get_all_bookings():
     try:
-        bookings=Booking.query.all()
-        data=[{
-            "id":booking.id,
-            "user_id":booking.user_id,
-            "flat_id":booking.flat_id,
-            "status":booking.status,
-            "booking_date":booking.booking_date.isoformat() if booking.booking_date else None
-        } for booking in bookings]
+        # Join bookings with users and flats to get complete booking information
+        bookings_data = db.session.query(Booking, User, Flat).join(User, Booking.user_id == User.id).join(Flat, Booking.flat_id == Flat.id).all()
+        
+        data = []
+        for booking, user, flat in bookings_data:
+            data.append({
+                "id": booking.id,
+                "user_id": booking.user_id,
+                "user_name": user.name if user.name and user.name != 'public' else user.email.split('@')[0] if user.email else f"User {user.id}",
+                "user_email": user.email,
+                "flat_id": booking.flat_id,
+                "flat_no": flat.flat_no,
+                "tower_name": flat.tower.name if flat.tower else "Unknown Tower",
+                "status": booking.status,
+                "booking_date": booking.booking_date.isoformat() if booking.booking_date else None
+            })
+        
         return jsonify(data),200
     except Exception as e:
         print(f"Error loading bookings: {str(e)}")
@@ -36,9 +45,16 @@ def approve_booking(booking_id):
     if not booking:
         return jsonify({'message':'Booking not found'}),404
 
+    # Update booking status
     booking.status='approved'
+    
+    # Make the flat unavailable since booking is confirmed
+    flat = Flat.query.get(booking.flat_id)
+    if flat:
+        flat.is_available = False
+    
     db.session.commit()
-    return jsonify({'message':'Booking approved'}),200
+    return jsonify({'message':'Booking approved and flat marked as unavailable'}),200
 
 @admin_bp.route('/booking/<int:booking_id>/decline',methods=['POST'])
 # @admin_required
@@ -47,9 +63,16 @@ def decline_booking(booking_id):
     if not booking:
         return jsonify({'message':'Booking not found'}),404
 
+    # Update booking status
     booking.status='declined'
+    
+    # Keep the flat available since booking was declined
+    flat = Flat.query.get(booking.flat_id)
+    if flat:
+        flat.is_available = True
+    
     db.session.commit()
-    return jsonify({'message':'Booking declined'}),200
+    return jsonify({'message':'Booking declined and flat remains available'}),200
 
 
 @admin_bp.route('/towers',methods=['GET'])

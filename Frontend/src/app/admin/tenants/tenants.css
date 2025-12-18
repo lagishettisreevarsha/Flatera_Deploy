@@ -19,13 +19,39 @@
 /* =====================
    HEADER
 ===================== */
-.page-header h3 {
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.header-text h3 {
   font-family: 'Playfair Display', serif;
   font-size: 2.2rem;
   font-weight: 700;
   color: #1a1a1a;
   margin-bottom: 0.5rem;
   letter-spacing: -0.02em;
+}
+
+.btn-back {
+  background: linear-gradient(135deg, #d4a574, #9b7d61);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
+}
+
+.btn-back:hover {
+  background: linear-gradient(135deg, #9b7d61, #d4a574);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
 }
 
 .subtitle {

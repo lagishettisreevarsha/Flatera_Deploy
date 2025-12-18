@@ -8,9 +8,17 @@
   padding: 24px;
   max-width: 900px;
   margin: 0 auto;
-  background: linear-gradient(135deg, #fafafa 0%, #f5f5f0 50%, #e8e0d5 100%);
+  background: linear-gradient(135deg, #f8f6f3 0%, #f4f1ed 100%) !important;
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
+}
+
+/* Force background override */
+:host ::ng-deep .my-bookings-page,
+:host ::ng-deep .my-bookings-page,
+:host ::ng-deep body,
+::ng-deep .my-bookings-page {
+  background: linear-gradient(135deg, #f8f6f3 0%, #f4f1ed 100%) !important;
 }
 
 .page-header {
@@ -36,7 +44,7 @@
 }
 
 .btn-back {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #d4a574, #9b7d61);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -45,12 +53,13 @@
   font-size: 14px;
   font-weight: 500;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
 }
 
 .btn-back:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
+  background: linear-gradient(135deg, #9b7d61, #d4a574);
 }
 
 .error {
@@ -75,7 +84,7 @@
 }
 
 .btn-primary {
-  background: #007bff;
+  background: linear-gradient(135deg, #d4a574, #9b7d61);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -85,7 +94,7 @@
 }
 
 .btn-primary:hover {
-  background: #0056b3;
+  background: linear-gradient(135deg, #9b7d61, #d4a574);
 }
 
 .booking-list {
@@ -96,49 +105,50 @@
 
 .booking-item {
   background: white;
-  border: 1px solid #e9ecef;
   border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-left: 4px solid #d4a574;
   transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
 }
 
 .booking-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  border-left: 4px solid #9b7d61;
 }
 
 .booking-info {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
 .booking-id {
-  font-weight: 600;
-  color: #2c3e50;
-  font-size: 18px;
-  background: #f8f9fa;
-  padding: 8px 16px;
+  background: #d4a574;
+  color: white;
+  padding: 4px 8px;
   border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .booking-flat {
-  color: #343a40;           /* Darker and much more readable */
-  font-weight: 500;
-  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.booking-tower {
+  color: #6c757d;
+  font-size: 14px;
 }
 
 .booking-date {
-  color: #495057;           /* Improved contrast over original #6c757d */
+  color: #6c757d;
   font-size: 14px;
-  background: #f8f9fa;
-  padding: 6px 12px;
-  border-radius: 4px;
 }
 
 .booking-status {
@@ -167,6 +177,70 @@
   background: linear-gradient(135deg, #f8d7da 0%, #ffb3ba 100%);
   color: #721c24;
   border: 1px solid #ffb3ba;
+}
+
+.booking-actions {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e9ecef;
+}
+
+.declined-message {
+  color: #721c24;
+  font-size: 14px;
+  margin-bottom: 12px;
+  background: #f8d7da;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #dc3545;
+}
+
+.approved-message {
+  color: #155724;
+  font-size: 14px;
+  margin-bottom: 12px;
+  background: #d4edda;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #28a745;
+}
+
+.btn-rebook {
+  background: linear-gradient(135deg, #d4a574, #9b7d61);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
+}
+
+.btn-rebook:hover {
+  background: linear-gradient(135deg, #9b7d61, #d4a574);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(212, 165, 116, 0.4);
+}
+
+.btn-view {
+  background: linear-gradient(135deg, #d4a574, #9b7d61);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
+}
+
+.btn-view:hover {
+  background: linear-gradient(135deg, #9b7d61, #d4a574);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(212, 165, 116, 0.4);
 }
 
 @media (max-width: 768px) {

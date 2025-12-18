@@ -51,4 +51,12 @@ export class MyBookingsComponent implements OnInit {
   goBack(): void {
     this.router.navigate(['/public/home']);
   }
+
+  rebookFlat(flatId: number): void {
+    this.router.navigate(['/public/flat-details', flatId]);
+  }
+
+  viewFlat(flatId: number): void {
+    this.router.navigate(['/public/flat-details', flatId]);
+  }
 }

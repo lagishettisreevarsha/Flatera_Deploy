@@ -133,10 +133,10 @@ def req_booking(flat_id):
         if not user_id:
             return jsonify({'message':'User ID not found in token'}),401
 
-        # Check if user already has a booking for this flat
-        existing_booking = Booking.query.filter_by(user_id=user_id, flat_id=flat_id).first()
+        # Check if user already has a PENDING booking for this flat
+        existing_booking = Booking.query.filter_by(user_id=user_id, flat_id=flat_id, status='pending').first()
         if existing_booking:
-            return jsonify({'message':'You already have a booking request for this flat'}),400
+            return jsonify({'message':'You already have a pending booking request for this flat'}),400
 
         new_booking=Booking (
             user_id=user_id,
