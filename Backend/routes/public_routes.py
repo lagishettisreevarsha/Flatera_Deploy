@@ -75,13 +75,21 @@ def get_flat_details(flat_id):
 
 @public_bp.route('/amenities',methods=['GET'])
 def get_amenities():
-    amenities=Amenity.query.all()
-    data=[{
-        "id":amenity.id,
-        "name":amenity.name,
-        "description":amenity.description
-    } for amenity in amenities]
-    return jsonify(data),200
+    try:
+        amenities=Amenity.query.all()
+        print(f"Found {len(amenities)} amenities") # Debug log
+        
+        data=[{
+            "id":amenity.id,
+            "name":amenity.name,
+            "description":amenity.description
+        } for amenity in amenities]
+        
+        print(f"Amenities data: {data}") # Debug log
+        return jsonify(data),200
+    except Exception as e:
+        print(f"Error loading amenities: {str(e)}")
+        return jsonify({"error": "Failed to load amenities", "details": str(e)}),500
 
 @public_bp.route('/tower/<int:tower_id>/flats',methods=['GET'])
 def get_flats_by_tower(tower_id):
@@ -145,3 +153,48 @@ def req_booking(flat_id):
         print(f"Booking error: {str(e)}")
         db.session.rollback()
         return jsonify({'error':'Failed to submit booking request', 'details': str(e)}),500
+
+@public_bp.route('/bookings',methods=['GET'])
+@jwt_required()
+def get_user_bookings():
+    try:
+        user=get_jwt_identity()
+        
+        # Handle different JWT token formats
+        if isinstance(user, str):
+            user_id = user
+        elif isinstance(user, dict):
+            user_id = user.get('id')
+        else:
+            return jsonify({'message':'User not authenticated properly'}),401
+        
+        if not user_id:
+            return jsonify({'message':'User ID not found in token'}),401
+
+        bookings = Booking.query.filter_by(user_id=user_id).all()
+        data = []
+        
+        for booking in bookings:
+            try:
+                flat = Flat.query.get(booking.flat_id)
+                tower_name = flat.tower.name if flat and flat.tower else "Unknown Tower"
+                flat_no = flat.flat_no if flat else "Unknown Flat"
+            except:
+                tower_name = "Unknown Tower"
+                flat_no = "Unknown Flat"
+            
+            booking_data = {
+                "id": booking.id,
+                "flat_id": booking.flat_id,
+                "flat_no": flat_no,
+                "tower_name": tower_name,
+                "status": booking.status,
+                "booking_date": booking.booking_date.isoformat() if booking.booking_date else None
+            }
+            data.append(booking_data)
+        
+        return jsonify(data), 200
+        
+    except Exception as e:
+        print(f"Error getting bookings: {str(e)}")
+        return jsonify({'error': 'Failed to load bookings', 'details': str(e)}), 500

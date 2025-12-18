@@ -94,4 +94,8 @@ export class Auth{
   getTenants() {
     return this.http.get(`${this.API}/admin/tenants`);
   }
+
+  getPublicAmenities() {
+    return this.http.get(`${this.API}/public/amenities`);
+  }
 }

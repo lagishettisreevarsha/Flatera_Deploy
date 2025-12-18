@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Auth } from '../../core/auth';
 
 @Component({
@@ -27,10 +28,8 @@ export class FlatsComponent implements OnInit {
   editingFlat: any = null;
   error: string | null = null;
   success: string | null = null;
-  selectedImage: File | null = null;
-  imagePreview: string | null = null;
 
-  constructor(private auth: Auth) {}
+  constructor(private auth: Auth, private router: Router) {}
 
   ngOnInit(): void {
     this.loadTowers();
@@ -69,26 +68,19 @@ export class FlatsComponent implements OnInit {
       return;
     }
     
-    // Create FormData for file upload
-    const formData = new FormData();
-    formData.append('tower_id', this.newFlat.tower_id);
-    formData.append('flat_no', this.newFlat.flat_no.trim());
-    formData.append('bedrooms', this.newFlat.bedrooms || '1');
-    formData.append('sqft', this.newFlat.sqft || '0');
-    formData.append('rent', this.newFlat.rent || '0');
-    formData.append('is_available', this.newFlat.is_available ? 'true' : 'false');
-    formData.append('floor', this.newFlat.floor || '');
-    formData.append('description', this.newFlat.description || '');
-    formData.append('features', this.newFlat.features || '');
+    const flatData = {
+      tower_id: parseInt(this.newFlat.tower_id),
+      flat_no: this.newFlat.flat_no.trim(),
+      bedrooms: parseInt(this.newFlat.bedrooms) || 1,
+      sqft: parseInt(this.newFlat.sqft) || 0,
+      rent: parseInt(this.newFlat.rent) || 0,
+      is_available: Boolean(this.newFlat.is_available),
+      floor: parseInt(this.newFlat.floor) || null,
+      description: this.newFlat.description || '',
+      features: this.newFlat.features || ''
+    };
     
-    // Add image if selected
-    if (this.selectedImage) {
-      formData.append('image', this.selectedImage);
-    }
-    
-    console.log('Sending flat data with image:', formData);
-    
-    this.auth.addFlat(formData).subscribe({
+    this.auth.addFlat(flatData).subscribe({
       next: (response) => {
         console.log('Flat added response:', response);
         this.success = 'Flat added successfully';
@@ -104,8 +96,6 @@ export class FlatsComponent implements OnInit {
           description: '',
           features: ''
         };
-        this.selectedImage = null;
-        this.imagePreview = null;
         this.loadFlats();
       },
       error: (err: any) => {
@@ -116,20 +106,6 @@ export class FlatsComponent implements OnInit {
         this.success = null;
       }
     });
-  }
-
-  onImageSelect(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedImage = file;
-      
-      // Create preview
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.imagePreview = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
   }
 
   editFlat(flat: any): void {
@@ -194,5 +170,9 @@ export class FlatsComponent implements OnInit {
   getTowerName(towerId: number): string {
     const tower = this.towers.find(t => t.id === towerId);
     return tower ? tower.name : 'Unknown';
+  }
+
+  goBack(): void {
+    this.router.navigate(['/admin/dashboard']);
   }
 }

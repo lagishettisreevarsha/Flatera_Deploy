@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../../core/auth';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
@@ -86,8 +86,8 @@ export class HomeComponent implements OnInit {
   }
 
   book(flatId: string): void {
-    // Navigate to booking page or show booking modal
-    alert(`Booking flat ${flatId}`);
+    // Navigate to flat details instead of showing alert
+    this.viewFlatDetails(flatId);
   }
 
   onLogout(): void {

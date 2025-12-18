@@ -25,6 +25,7 @@ export class Tenants implements OnInit {
     
     this.api.getTenants().subscribe({
       next: (data: any) => {
+        console.log('Tenants data received:', data); // Debug log
         this.tenants = data || [];
         this.loading = false;
       },
@@ -37,7 +38,18 @@ export class Tenants implements OnInit {
   }
   
   getTenantName(tenant: any): string {
-    return tenant.user_name || tenant.tenant_name || `Tenant ${tenant.user_id}`;
+    console.log('Tenant object:', tenant); // Debug log
+    // Try multiple possible name fields
+    if (tenant.user_name && tenant.user_name !== 'public') {
+      return tenant.user_name;
+    }
+    if (tenant.name && tenant.name !== 'public') {
+      return tenant.name;
+    }
+    if (tenant.email) {
+      return tenant.email.split('@')[0]; // Use email username as fallback
+    }
+    return `Tenant ${tenant.user_id}`;
   }
   
   getFlatInfo(tenant: any): string {

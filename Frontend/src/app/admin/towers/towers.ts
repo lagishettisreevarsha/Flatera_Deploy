@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Auth } from '../../core/auth';
 
 @Component({
@@ -15,7 +16,7 @@ export class Towers implements OnInit {
   error: string | null = null;
   success: string | null = null;
 
-  constructor(private api: Auth) {}
+  constructor(private api: Auth, private router: Router) {}
 
   ngOnInit() {
     this.load();
@@ -55,5 +56,9 @@ export class Towers implements OnInit {
       next: () => { this.success = 'Tower deleted'; this.load(); },
       error: (err) => this.error = err?.error?.message || 'Failed to delete tower.'
     });
+  }
+  
+  goBack(): void {
+    this.router.navigate(['/admin/dashboard']);
   }
 }

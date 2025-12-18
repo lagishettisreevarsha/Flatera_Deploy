@@ -100,6 +100,23 @@
   margin-bottom: 1.5rem;
 }
 
+.success-state {
+  text-align: center;
+  padding: 2rem;
+  background: #e8f5e8;
+  border: 1px solid #4caf50;
+  border-radius: 12px;
+  margin: 2rem auto;
+  max-width: 500px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.success-state p {
+  color: #2e7d32;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
 /* =====================
    HEADER
 ===================== */
@@ -340,6 +357,32 @@
   gap: 1.5rem;
 }
 
+.booking-info {
+  margin-top: 0.5rem;
+}
+
+.booking-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #6F4E37;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 165, 116, 0.2);
+  margin: 0;
+}
+
+.booking-text strong {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.booking-text.unavailable {
+  color: #8b7355;
+  background: rgba(139, 115, 85, 0.1);
+  border-color: rgba(139, 115, 85, 0.2);
+}
+
 .availability-status {
   padding: 1rem 1.5rem;
   border-radius: 12px;
@@ -402,6 +445,27 @@
   background: #6F4E37;
   color: #f5f5f0;
   cursor: not-allowed;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* =====================

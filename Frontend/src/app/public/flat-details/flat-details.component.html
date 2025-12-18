@@ -1,4 +1,4 @@
-<div class="flat-details-container">
+<div class="flat-details-container" [style]="sanitizer.bypassSecurityTrustStyle('padding: 1.5rem 2rem; max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; min-height: 100vh; background: linear-gradient(135deg, #fafafa 0%, #f5f5f0 50%, #e8e0d5 100%); font-family: Inter, sans-serif; color: #1a1a1a;')">
   <!-- Loading State -->
   <div *ngIf="loading" class="loading">
     <div class="spinner"></div>
@@ -9,6 +9,11 @@
   <div *ngIf="error" class="error-state">
     <p>{{ error }}</p>
     <button class="back-btn" (click)="goBack()">Back to Flats</button>
+  </div>
+
+  <!-- Success State -->
+  <div *ngIf="success" class="success-state">
+    <p>{{ success }}</p>
   </div>
 
   <!-- Flat Details -->
@@ -24,19 +29,6 @@
 
     <!-- Main Content -->
     <div class="flat-main">
-      <!-- Image Gallery -->
-      <div class="flat-gallery">
-        <img 
-          [src]="flat.image" 
-          [alt]="'Flat ' + flat.flat_no" 
-          class="main-image"
-          (error)="onImageError($event)"
-          (load)="onImageLoad($event)">
-        <div *ngIf="imageLoading" class="image-loading">
-          <div class="small-spinner"></div>
-        </div>
-      </div>
-
       <!-- Details Section -->
       <div class="flat-info">
         <div class="info-section">
@@ -82,9 +74,20 @@
           <button 
             class="book-btn" 
             (click)="bookFlat()"
-            [disabled]="!flat.is_available">
-            {{ flat.is_available ? 'Book This Flat' : 'Currently Unavailable' }}
+            [disabled]="!flat.is_available || bookingLoading">
+            <span *ngIf="bookingLoading" class="loading-spinner"></span>
+            {{ bookingLoading ? 'Processing...' : (flat.is_available ? 'Book This Flat' : 'Currently Unavailable') }}
           </button>
+          
+          <div class="booking-info">
+            <p *ngIf="flat.is_available" class="booking-text">
+              <strong>Ready to book?</strong> Click the button above to reserve this flat. 
+              You'll receive a confirmation once your booking is processed.
+            </p>
+            <p *ngIf="!flat.is_available" class="booking-text unavailable">
+              This flat is currently occupied. Check back later or explore other available flats.
+            </p>
+          </div>
         </div>
       </div>
     </div>

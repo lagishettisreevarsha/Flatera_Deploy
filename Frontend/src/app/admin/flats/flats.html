@@ -6,6 +6,7 @@
 
   <!-- Header -->
   <div class="page-header">
+    <button class="btn-back" (click)="goBack()">← Back to Dashboard</button>
     <h3>Flats</h3>
     <p class="subtitle">Manage flats across towers</p>
   </div>
@@ -24,14 +25,6 @@
       <input [(ngModel)]="newFlat.description" name="description" placeholder="Description" />
       <input [(ngModel)]="newFlat.features" name="features" placeholder="Features (comma separated)" />
       
-      <div class="form-group">
-        <label>Flat Image:</label>
-        <input type="file" (change)="onImageSelect($event)" accept="image/*" />
-        <div *ngIf="selectedImage" class="image-preview">
-          <img [src]="imagePreview" alt="Preview" style="max-width: 200px; max-height: 150px; margin-top: 10px; border-radius: 8px;" />
-        </div>
-      </div>
-
       <label class="checkbox">
         <input type="checkbox" [(ngModel)]="newFlat.is_available" name="is_available" />
         Available

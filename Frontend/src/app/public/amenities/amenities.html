@@ -1,0 +1,38 @@
+<div class="amenities-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <h3>Amenities</h3>
+    <p class="subtitle">Explore our building amenities and facilities</p>
+    <button class="btn-back" (click)="goBack()">← Back to Home</button>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error">
+    {{ error }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    Loading amenities...
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !amenities.length" class="empty-state">
+    <p>No amenities available at the moment.</p>
+    <button class="btn-primary" (click)="goBack()">Back to Home</button>
+  </div>
+
+  <!-- Amenities Grid -->
+  <div *ngIf="!loading && amenities.length" class="amenities-grid">
+    <div *ngFor="let amenity of amenities" class="amenity-card">
+      
+      <div class="amenity-content">
+        <h4 class="amenity-name">{{ amenity.name }}</h4>
+        <p class="amenity-description">{{ amenity.description }}</p>
+      </div>
+
+    </div>
+  </div>
+
+</div>

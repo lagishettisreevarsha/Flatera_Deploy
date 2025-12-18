@@ -4,6 +4,7 @@ from models.booking import Booking
 from models.flat import Flat
 from models.tower import Tower
 from models.amenity import Amenity
+from models.user import User
 from decoraters import admin_required
 from schemas.flat_schema import FlatSchema
 from schemas.amenity_schema import AmenitySchema
@@ -14,15 +15,19 @@ admin_bp=Blueprint('/admin',__name__)
 @admin_bp.route('/bookings',methods=['GET'])
 # @admin_required
 def get_all_bookings():
-    bookings=Booking.query.all()
-    data=[{
-        "id":booking.id,
-        "user_id":booking.user_id,
-        "flat_id":booking.flat_id,
-        "status":booking.status,
-        "created_at":booking.created_at
-    } for booking in bookings]
-    return jsonify(data),200
+    try:
+        bookings=Booking.query.all()
+        data=[{
+            "id":booking.id,
+            "user_id":booking.user_id,
+            "flat_id":booking.flat_id,
+            "status":booking.status,
+            "booking_date":booking.booking_date.isoformat() if booking.booking_date else None
+        } for booking in bookings]
+        return jsonify(data),200
+    except Exception as e:
+        print(f"Error loading bookings: {str(e)}")
+        return jsonify({"error": "Failed to load bookings", "details": str(e)}),500
 
 @admin_bp.route('/booking/<int:booking_id>/approve',methods=['POST'])
 # @admin_required
@@ -148,82 +153,65 @@ def get_flats():
 @admin_bp.route('/flats',methods=['POST'])
 # @admin_required
 def create_flat():
-    # Handle both JSON and multipart form data
-    if request.is_json:
-        data = request.json
-        image_filename = None
-    else:
-        data = request.form.to_dict()
-        image_file = request.files.get('image')
-        image_filename = None
+    if not request.is_json:
+        return jsonify({'message':'JSON data required'}), 400
         
-        if image_file and image_file.filename:
-            # Save image file
-            import os
-            from werkzeug.utils import secure_filename
-            
-            # Create uploads directory if it doesn't exist
-            upload_dir = os.path.join(os.getcwd(), 'static', 'images', 'flats')
-            os.makedirs(upload_dir, exist_ok=True)
-            
-            # Secure the filename and save the file
-            filename = secure_filename(image_file.filename)
-            image_filename = f"{filename}"
-            image_path = os.path.join(upload_dir, image_filename)
-            image_file.save(image_path)
-            
-            print(f"Image saved: {image_path}")
-    
+    data = request.json
     print(f"Received data: {data}")
-    schema = FlatSchema()
+    
+    required_fields = ['flat_no', 'bedrooms', 'sqft', 'rent', 'tower_id']
+    missing_fields = [field for field in required_fields if not data.get(field)]
+    
+    if missing_fields:
+        return jsonify({'message': f'Missing required fields: {", ".join(missing_fields)}'}), 400
+    
     try:
-        # Convert form data to dict for validation
-        if request.is_json:
-            validated_data = schema.load(request.json)
-        else:
-            validated_data = schema.load(data)
-    except ValidationError as err:
-        return {"errors": err.messages}, 400
+        flat_no = str(data['flat_no']).strip()
+        bedrooms = int(data['bedrooms'])
+        sqft = int(data['sqft'])
+        rent = float(data['rent'])
+        tower_id = int(data['tower_id'])
+        is_available = data.get('is_available', True)
+        description = data.get('description', '')
+        features = data.get('features', '')
+        floor = data.get('floor')
+        
+        if floor is not None:
+            floor = int(floor)
+    except (ValueError, TypeError) as e:
+        return jsonify({'message': f'Invalid data format: {str(e)}'}), 400
     
-    flat_no = validated_data["flat_no"]
-    bedrooms = validated_data["bedrooms"]
-    sqft = validated_data["sqft"]
-    rent = validated_data["rent"]
-    tower_id = validated_data["tower_id"]
-    is_available = validated_data.get("is_available", True)
-    
-    # Add additional fields
-    description = validated_data.get("description")
-    features = validated_data.get("features")
-    floor = validated_data.get("floor")
-
-    if not all([flat_no,bedrooms,sqft,rent,tower_id]):
-        return jsonify({'message':'All required fields must be provided'}),400
+    if not all([flat_no, bedrooms, sqft, rent, tower_id]):
+        return jsonify({'message':'All required fields must be provided'}), 400
     
     if Flat.query.filter_by(flat_no=flat_no).first():
-        return jsonify({'message':'Flat already exists'}),400
+        return jsonify({'message':'Flat already exists'}), 400
     
-    tower=Tower.query.get(tower_id)
+    tower = Tower.query.get(tower_id)
     if not tower:
-        return jsonify({'message':'Tower not found'}),404
+        return jsonify({'message':'Tower not found'}), 404
     
-    new_flat=Flat(
-        flat_no=flat_no,
-        bedrooms=bedrooms,
-        sqft=sqft,
-        rent=rent,
-        tower_id=tower_id,
-        is_available=is_available,
-        image=image_filename,
-        description=description,
-        features=features,
-        floor=floor
-    )
+    try:
+        new_flat = Flat(
+            flat_no=flat_no,
+            bedrooms=bedrooms,
+            sqft=sqft,
+            rent=rent,
+            tower_id=tower_id,
+            is_available=is_available,
+            description=description,
+            features=features,
+            floor=floor
+        )
 
-    db.session.add(new_flat)
-    db.session.commit()
+        db.session.add(new_flat)
+        db.session.commit()
 
-    return jsonify({'message':'Flat created successfully', 'image': image_filename}),201
+        return jsonify({'message':'Flat created successfully'}), 201
+    except Exception as e:
+        db.session.rollback()
+        print(f"Database error: {str(e)}")
+        return jsonify({'message': f'Database error: {str(e)}'}), 500
 
 @admin_bp.route('/flats/<int:flat_id>',methods=['PUT'])
 
@@ -366,12 +354,27 @@ def delete_amenity(amenity_id):
 @admin_bp.route('/tenants',methods=['GET'])
 # @admin_required
 def get_tenants():
-    tenants=Booking.query.filter_by(status="approved").all()
-
-    data=[{
-        "booking_id": tenant.id,
-        "user_id": tenant.user_id,
-        "flat_id": tenant.flat_id
-    } for tenant in tenants]
-
-    return jsonify(data),200
+    try:
+        # Join bookings with users and flats to get complete tenant information
+        tenants = db.session.query(Booking, User, Flat).join(User, Booking.user_id == User.id).join(Flat, Booking.flat_id == Flat.id).filter(Booking.status == "approved").all()
+        
+        print(f"Found {len(tenants)} tenants") # Debug log
+        
+        data = []
+        for booking, user, flat in tenants:
+            print(f"User: {user.name}, Email: {user.email}, Role: {user.role}") # Debug log
+            data.append({
+                "booking_id": booking.id,
+                "user_id": user.id,
+                "user_name": user.name if user.name and user.name != 'public' else user.email.split('@')[0] if user.email else f"User {user.id}",
+                "user_email": user.email,
+                "flat_id": flat.id,
+                "flat_no": flat.flat_no,
+                "tower_id": flat.tower_id,
+                "booking_date": booking.booking_date.isoformat() if booking.booking_date else None
+            })
+        
+        return jsonify(data), 200
+    except Exception as e:
+        print(f"Error loading tenants: {str(e)}")
+        return jsonify({"error": "Failed to load tenants", "details": str(e)}), 500

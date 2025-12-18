@@ -17,6 +17,39 @@
 }
 
 /* =====================
+   BACK BUTTON
+===================== */
+.btn-back {
+  background: linear-gradient(135deg, #d4a574, #9b7d61) !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 16px rgba(212, 165, 116, 0.3) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  margin-bottom: 1.5rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.btn-back:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(212, 165, 116, 0.4) !important;
+  background: linear-gradient(135deg, #9b7d61, #d4a574) !important;
+}
+
+.btn-back:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 8px rgba(212, 165, 116, 0.3) !important;
+}
+
+/* =====================
    HEADER
 ===================== */
 .page-header h3 {

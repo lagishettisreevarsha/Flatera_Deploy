@@ -3,7 +3,10 @@
   <!-- Header -->
   <header class="dashboard-header">
     <h1>All Flats</h1>
-    <button class="logout-btn" (click)="onLogout()">Logout</button>
+    <div class="header-actions">
+      <button class="amenities-btn" routerLink="/public/amenities">View Amenities</button>
+      <button class="logout-btn" (click)="onLogout()">Logout</button>
+    </div>
   </header>
 
   <!-- Flats Grid -->

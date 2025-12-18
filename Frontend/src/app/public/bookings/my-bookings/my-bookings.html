@@ -1,1 +1,44 @@
-<p>my-bookings works!</p>
+<div class="my-bookings-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <h3>My Bookings</h3>
+    <p class="subtitle">View and track your booking requests</p>
+    <button class="btn-back" (click)="goBack()">← Back to Home</button>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error">
+    {{ error }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    Loading your bookings...
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !bookings.length" class="empty-state">
+    <p>You haven't made any bookings yet.</p>
+    <button class="btn-primary" (click)="goBack()">Browse Flats</button>
+  </div>
+
+  <!-- Booking List -->
+  <div *ngIf="!loading && bookings.length" class="booking-list">
+    <div *ngFor="let booking of bookings" class="booking-item">
+      
+      <div class="booking-info">
+        <span class="booking-id">#{{ booking.id }}</span>
+        <span class="booking-flat">Flat {{ booking.flat_id }}</span>
+        <span class="booking-date">
+          {{ booking.booking_date ? (booking.booking_date | date:'mediumDate') : 'Date not available' }}
+        </span>
+        <span class="booking-status" [ngClass]="getStatusClass(booking.status)">
+          {{ booking.status || 'Unknown' }}
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+</div>

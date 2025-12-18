@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Auth } from '../../core/auth';
 
 @Component({
@@ -13,7 +14,7 @@ export class Bookings implements OnInit {
   loading: boolean = true;
   error: string = '';
   
-  constructor(private api: Auth) {}
+  constructor(private api: Auth, private router: Router) {}
   
   ngOnInit() { 
     this.load(); 
@@ -46,7 +47,7 @@ export class Bookings implements OnInit {
       },
       error: (err: any) => {
         console.error('Failed to approve booking:', err);
-        alert('Failed to approve booking: ' + (err.error?.message || err.message));
+        this.error = 'Failed to approve booking';
       }
     });
   }
@@ -61,7 +62,7 @@ export class Bookings implements OnInit {
       },
       error: (err: any) => {
         console.error('Failed to decline booking:', err);
-        alert('Failed to decline booking: ' + (err.error?.message || err.message));
+        this.error = 'Failed to decline booking';
       }
     });
   }
@@ -81,5 +82,9 @@ export class Bookings implements OnInit {
       case 'declined': return 'declined';
       default: return '';
     }
+  }
+  
+  goBack(): void {
+    this.router.navigate(['/admin/dashboard']);
   }
 }
