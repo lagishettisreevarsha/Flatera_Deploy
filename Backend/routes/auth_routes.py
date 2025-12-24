@@ -40,11 +40,10 @@ def login():
     if requested_role == "admin" and user.role != "admin":
         return jsonify({"message": "Access denied. Admin credentials required."}), 403
     
-    # If requesting user role but user is admin, allow admin to login as user (optional)
-    # Or you can restrict this by uncommenting the following:
-    # if requested_role == "user" and user.role == "admin":
-    #     return jsonify({"message": "Please use admin login for admin accounts."}), 403
-
+    # If user is admin but didn't select admin role, deny access
+    if user.role == "admin" and requested_role != "admin":
+        return jsonify({"message": "Admin users must select 'admin' role to login."}), 403
+    
     access_token = create_access_token(
         identity=str(user.id),
         additional_claims={
