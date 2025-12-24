@@ -64,6 +64,11 @@
               <span class="feature-icon">✓</span>
               <span class="feature-text">{{ feature }}</span>
             </div>
+            <!-- Fallback content if no features -->
+            <div *ngIf="!flat?.features || flat.features.length === 0" class="feature-item">
+              <span class="feature-icon">⚠️</span>
+              <span class="feature-text">No features available</span>
+            </div>
           </div>
         </div>
 

@@ -10,7 +10,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   imports: [CommonModule],
   templateUrl: './flat-details.component.html',
   styleUrls: ['./flat-details.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.Emulated
 })
 export class FlatDetailsComponent implements OnInit {
   flat: any = null;
@@ -51,8 +51,14 @@ export class FlatDetailsComponent implements OnInit {
         // Process flat data from backend
         if (this.flat) {
           
-          // Ensure features array exists
+          // Ensure features array exists and is properly formatted
           if (!this.flat.features || this.flat.features.length === 0) {
+            this.flat.features = ["Parking", "24/7 Security"];
+          } else if (typeof this.flat.features === 'string') {
+            // Split comma-separated string into array and clean up
+            this.flat.features = this.flat.features.split(',').map((feature: string) => feature.trim()).filter((feature: string) => feature.length > 0);
+          } else if (!Array.isArray(this.flat.features)) {
+            // Convert to array if it's not already
             this.flat.features = ["Parking", "24/7 Security"];
           }
           
