@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    container_name: flatera-backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - db_data:/app
+    environment:
+      - FLASK_ENV=production
+    restart: always
+
+  frontend:
+    build: ./frontend
+    container_name: flatera-frontend
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  db_data:
