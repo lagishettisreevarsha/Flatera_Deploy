@@ -13,10 +13,9 @@ from marshmallow import ValidationError
 admin_bp=Blueprint('/admin',__name__)
 
 @admin_bp.route('/bookings',methods=['GET'])
-# @admin_required
+@admin_required
 def get_all_bookings():
     try:
-        # Join bookings with users and flats to get complete booking information
         bookings_data = db.session.query(Booking, User, Flat).join(User, Booking.user_id == User.id).join(Flat, Booking.flat_id == Flat.id).all()
         
         data = []
@@ -39,16 +38,13 @@ def get_all_bookings():
         return jsonify({"error": "Failed to load bookings", "details": str(e)}),500
 
 @admin_bp.route('/booking/<int:booking_id>/approve',methods=['POST'])
-# @admin_required
+@admin_required
 def approve_booking(booking_id):
     booking=Booking.query.get(booking_id)
     if not booking:
         return jsonify({'message':'Booking not found'}),404
-
-    # Update booking status
-    booking.status='approved'
     
-    # Make the flat unavailable since booking is confirmed
+    booking.status='approved'
     flat = Flat.query.get(booking.flat_id)
     if flat:
         flat.is_available = False
@@ -57,16 +53,13 @@ def approve_booking(booking_id):
     return jsonify({'message':'Booking approved and flat marked as unavailable'}),200
 
 @admin_bp.route('/booking/<int:booking_id>/decline',methods=['POST'])
-# @admin_required
+@admin_required
 def decline_booking(booking_id):    
     booking=Booking.query.get(booking_id)
     if not booking:
         return jsonify({'message':'Booking not found'}),404
-
-    # Update booking status
-    booking.status='declined'
     
-    # Keep the flat available since booking was declined
+    booking.status='declined'
     flat = Flat.query.get(booking.flat_id)
     if flat:
         flat.is_available = True
@@ -76,7 +69,7 @@ def decline_booking(booking_id):
 
 
 @admin_bp.route('/towers',methods=['GET'])
-# @admin_required
+@admin_required
 def get_towers():
     towers=Tower.query.all()
 
@@ -87,7 +80,7 @@ def get_towers():
 
 
 @admin_bp.route('/towers',methods=['POST'])
-# @admin_required
+@admin_required
 def create_tower():
     data=request.json
 
@@ -110,7 +103,7 @@ def create_tower():
     return jsonify({'message':'Tower created successfully'}),201
 
 @admin_bp.route('/towers',methods=['DELETE'])
-# @admin_required
+@admin_required
 def delete_tower():
     data=request.json
 
@@ -128,7 +121,7 @@ def delete_tower():
 
 
 @admin_bp.route("/towers/<int:tower_id>", methods=["PUT"])
-# @admin_required
+@admin_required
 def update_tower(tower_id):
     tower = Tower.query.get(tower_id)
 
@@ -153,7 +146,7 @@ def update_tower(tower_id):
     return {"msg": "Tower updated successfully"}, 200
 
 @admin_bp.route('/flats',methods=['GET'])
-# @admin_required
+@admin_required
 def get_flats():
     try:
         flats=Flat.query.all()
@@ -174,7 +167,7 @@ def get_flats():
         return jsonify({"error": "Failed to load flats", "details": str(e)}),500
 
 @admin_bp.route('/flats',methods=['POST'])
-# @admin_required
+@admin_required
 def create_flat():
     if not request.is_json:
         return jsonify({'message':'JSON data required'}), 400
@@ -237,7 +230,6 @@ def create_flat():
         return jsonify({'message': f'Database error: {str(e)}'}), 500
 
 @admin_bp.route('/flats/<int:flat_id>',methods=['PUT'])
-
 @admin_required
 def update_flat(flat_id):
     flat=Flat.query.get(flat_id)
@@ -278,7 +270,7 @@ def update_flat(flat_id):
 
 
 @admin_bp.route('/flats/<int:flat_id>',methods=['DELETE'])
-# @admin_required
+@admin_required
 def delete_flat(flat_id):
     flat=Flat.query.get(flat_id)
 
@@ -296,7 +288,7 @@ def delete_flat(flat_id):
     return jsonify({'message':'Flat deleted successfully'}),200
 
 @admin_bp.route('/amenities',methods=['GET'])
-# @admin_required 
+@admin_required 
 def get_amenities():
     amenities=Amenity.query.all()
 
@@ -309,7 +301,7 @@ def get_amenities():
     return jsonify(data),200
 
 @admin_bp.route('/amenities',methods=['POST'])
-# @admin_required
+@admin_required
 def create_amenity():
     data=request.json
 
@@ -340,7 +332,7 @@ def create_amenity():
     return jsonify({'message':'Amenity added successfully'}),201
 
 @admin_bp.route('/amenities/<int:amenity_id>',methods=['PUT'])
-# @admin_required
+@admin_required
 def update_amenity(amenity_id):
     amenity=Amenity.query.get(amenity_id)
 
@@ -362,7 +354,7 @@ def update_amenity(amenity_id):
     return jsonify({'message':'Amenity updated successfully'}),200
 
 @admin_bp.route('/amenities/<int:amenity_id>',methods=['DELETE'])
-# @admin_required
+@admin_required
 def delete_amenity(amenity_id):
     amenity=Amenity.query.get(amenity_id)
 
@@ -375,17 +367,16 @@ def delete_amenity(amenity_id):
     return jsonify({'message':'Amenity deleted successfully'}),200
 
 @admin_bp.route('/tenants',methods=['GET'])
-# @admin_required
+@admin_required
 def get_tenants():
     try:
-        # Join bookings with users and flats to get complete tenant information
         tenants = db.session.query(Booking, User, Flat).join(User, Booking.user_id == User.id).join(Flat, Booking.flat_id == Flat.id).filter(Booking.status == "approved").all()
         
-        print(f"Found {len(tenants)} tenants") # Debug log
+        print(f"Found {len(tenants)} tenants")
         
         data = []
         for booking, user, flat in tenants:
-            print(f"User: {user.name}, Email: {user.email}, Role: {user.role}") # Debug log
+            print(f"User: {user.name}, Email: {user.email}, Role: {user.role}") 
             data.append({
                 "booking_id": booking.id,
                 "user_id": user.id,
