@@ -43,20 +43,16 @@ def login():
     # If user is admin but didn't select admin role, deny access
     if user.role == "admin" and requested_role != "admin":
         return jsonify({"message": "Admin users must select 'admin' role to login."}), 403
-    
     access_token = create_access_token(
         identity=str(user.id),
         additional_claims={
             "role": str(user.role)
         }
     )
-
     return jsonify({
         "access_token": access_token,
         "role": user.role
     })
-
-
 
 
 # from flask import Blueprint, request, jsonify
@@ -125,14 +121,6 @@ def login():
 #         'access_token': token,
 #         'role': user.role
 #     }), 200
-
-
-
-
-
-
-
-
 
 
 # # from flask import Blueprint, request, jsonify

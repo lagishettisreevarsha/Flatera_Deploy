@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-
-
 import { authGuard, guestGuard } from './core/auth-guard';
 import { Login } from './auth/login/login';
 import { Register } from './auth/register/register';
@@ -16,8 +14,6 @@ import { Towers } from './admin/towers/towers';
 import { FlatsComponent } from './admin/flats/flats';
 import { AmenitiesComponent as AdminAmenitiesComponent } from './admin/amenities/amenities';
 import { Tenants } from './admin/tenants/tenants';
-// import { LandingComponent } from './landing/landing';
-// import { LandingComponent } from './landing/landing';
 import { Gallary } from './gallary/gallary';
 import { Landing } from './landing/landing';
 

@@ -87,4 +87,5 @@ export class Bookings implements OnInit {
   goBack(): void {
     this.router.navigate(['/admin/dashboard']);
   }
+  
 }

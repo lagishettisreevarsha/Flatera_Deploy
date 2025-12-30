@@ -8,7 +8,7 @@ from flask_cors import CORS
 from models.user import User
 
 app=Flask(__name__)
-CORS(app,origins=["http://localhost:4200"])
+CORS(app, origins=["*"], supports_credentials=True)
 app.config.from_object(Config)
            
 db.init_app(app)
