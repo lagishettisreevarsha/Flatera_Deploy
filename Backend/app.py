@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask
 from config import Config
 from extensions import db, Marshmallow, bcrypt, jwt
 from routes.auth_routes  import auth_bp
@@ -19,37 +19,6 @@ jwt.init_app(app)
 app.register_blueprint(auth_bp,url_prefix='/auth')
 app.register_blueprint(public_bp,url_prefix='/public')
 app.register_blueprint(admin_bp,url_prefix='/admin')
-
-# Health check endpoint
-@app.route('/health')
-def health_check():
-    try:
-        # Test database connection
-        db.session.execute('SELECT 1')
-        return jsonify({
-            "status": "healthy",
-            "database": "connected",
-            "message": "Flatera Backend API is running"
-        }), 200
-    except Exception as e:
-        return jsonify({
-            "status": "unhealthy",
-            "database": "disconnected",
-            "error": str(e)
-        }), 500
-
-@app.route('/')
-def home():
-    return jsonify({
-        "message": "Welcome to Flatera Backend API",
-        "version": "1.0.0",
-        "endpoints": {
-            "health": "/health",
-            "auth": "/auth/*",
-            "public": "/public/*",
-            "admin": "/admin/*"
-        }
-    })
 
 def create_default_admin():
     admin_email = "admin@flatera.com"
