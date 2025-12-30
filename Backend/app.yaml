@@ -1,0 +1,16 @@
+runtime: python311
+
+env_variables:
+  DATABASE_URL: "postgresql://neondb_owner:npg_P2UoA0aeiwbk@ep-rough-glade-adze8iu4-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+  SECRET_KEY: "your-production-secret-key-here"
+  JWT_SECRET_KEY: "your-jwt-secret-key-here"
+  FLASK_ENV: "production"
+
+automatic_scaling:
+  min_instances: 1
+  max_instances: 10
+
+resources:
+  cpu: 1
+  memory_gb: 0.5
+  disk_size_gb: 10
