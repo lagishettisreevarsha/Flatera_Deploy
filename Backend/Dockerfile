@@ -6,6 +6,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     gcc \
     libpq-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
@@ -19,5 +20,9 @@ ENV PYTHONUNBUFFERED=1
 
 EXPOSE 5000
 
-# Initialize database and start app
-CMD ["sh", "-c", "python init_postgres.py && gunicorn -b 0.0.0.0:5000 app:app"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:5000/health || exit 1
+
+# Use the production startup script
+CMD ["python", "production_start.py"]
