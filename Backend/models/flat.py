@@ -4,7 +4,7 @@ class Flat(db.Model):
     __tablename__='flats'
 
     id = db.Column(db.Integer, primary_key=True)
-    flat_no = db.Column(db.String(10), unique=True, nullable=False)
+    flat_no = db.Column(db.String(30), unique=True, nullable=False)
     bedrooms = db.Column(db.Integer, nullable=False)
     sqft=db.Column(db.Integer, nullable=False)
     rent=db.Column(db.Float, nullable=False)
