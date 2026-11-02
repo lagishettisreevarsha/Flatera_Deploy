@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://34.44.24.16:5000'
+  apiUrl: 'https://flatera-backend.onrender.com'
 };
+
